@@ -27,6 +27,7 @@ class CategoryResource extends Resource
     protected static ?string $navigationLabel = 'دسته بندی';
     protected static ?int $navigationSort =2;
 
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-s-squares-2x2';
 
     protected static ?string $recordTitleAttribute = 'category';
