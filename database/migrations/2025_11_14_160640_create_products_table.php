@@ -26,6 +26,7 @@ return new class extends Migration
             $table->text('detail')->nullable();
             $table->string('status')->default('1'); //0 = namojood, 1 = mojood, 2 = anbar
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

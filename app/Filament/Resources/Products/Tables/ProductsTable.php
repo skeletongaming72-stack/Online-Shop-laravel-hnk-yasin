@@ -3,14 +3,25 @@
 namespace App\Filament\Resources\Products\Tables;
 
 use App\Models\Product;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use function Laravel\Prompts\select;
 
@@ -25,7 +36,7 @@ class ProductsTable
                     ->defaultImageUrl('/images/no-profile.png')
                     ->width(150)
                     ->circular(),
-                TextColumn::make('title')
+                TextInputColumn::make('title')
                     ->label('عنوان محصول')
                     ->searchable(),
                 TextColumn::make('link')
@@ -84,15 +95,31 @@ class ProductsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                TrashedFilter::make(),
+//                TernaryFilter::make()
+//                    ->label('وضعیت محصول'),
+                SelectFilter::make('status')
+                ->options([
+                    '0' => 'ناموجود',
+                    '1' => 'موجود در فروشگاه',
+                    '2' => 'موجود در انبار',
+                ])
+                ->label('وضعیت محصول'),
+            ],FiltersLayout::AboveContentCollapsible)->hiddenFilterIndicators()
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                    RestoreAction::make(),
+                    ReplicateAction::make(),
+                ])->button()->label('عملیات')
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
