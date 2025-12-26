@@ -82,6 +82,7 @@ class ProductsTable
                         '1' => 'موجود در فروشگاه',
                         '2' => 'موجود در انبار',
                     ])
+                    ->selectablePlaceholder(false)
                     ->label('وضعیت محصول'),
                 TextColumn::make('created_at')
                     ->label('تاریخ ایجاد محصول')
